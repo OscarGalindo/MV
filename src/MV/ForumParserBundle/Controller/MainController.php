@@ -3,9 +3,10 @@
 namespace MV\ForumParserBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Goutte\Client;
 use Symfony\Component\HttpFoundation\Response;
+use Goutte\Client;
 
 class MainController extends Controller
 {
@@ -19,11 +20,6 @@ class MainController extends Controller
      */
     private $client;
 
-    /**
-     * @var array
-     */
-    private $mv = array();
-
     public function __construct(){
         $this->client = new Client();
     }
@@ -31,19 +27,32 @@ class MainController extends Controller
     public function indexAction()
     {
         $data = $this->_getHtml();
-        $this->mv = $data->filter('h3')->each(function($n) {
-                $data['title'] = $n->text();
+        $headers = $data->filter('h3')->each(function(Crawler $headers, $i) {
+                $data['title'] = $headers->text();
                 return $data;
             });
 
-        $json = new JsonResponse(array('MV' => $this->mv));
-        $json->setEncodingOptions(128);
+        $forums = $data->filter('.fpanels')->each(function(Crawler $forums, $i) {
+                $data['forums'] = $forums->filter('.fpanel .info a')->each(function(Crawler $link, $i) {
+                       return array('title' => $link->text(), 'link' => $link->link()->getUri());
+                    });
+                return $data;
+            });
+
+        for($i = 0; $i < count($headers); $i++) {
+            $mv[$i]['title'] = $headers[$i]['title'];
+            $mv[$i]['forums'] = $forums[$i]['forums'];
+        }
+
+        $json = new JsonResponse($mv);
+        // $json->setEncodingOptions(128);
         return $json;
     }
 
     public function forumAction($slug_forum)
     {
-        return Response::create($slug_forum);
+        $data = $this->_getHtml();
+        return Response::create($data);
     }
 
 
@@ -54,7 +63,7 @@ class MainController extends Controller
      */
     private function _getMvUrl()
     {
-        return $this->container->getParameter('mv.url');
+        return $this->container->getParameter('mv.forum_url');
     }
 
     /**
@@ -62,10 +71,10 @@ class MainController extends Controller
      *
      * @return \Symfony\Component\DomCrawler\Crawler
      */
-    private function _getHtml()
+    private function _getHtml($slug = '')
     {
         $this->_url = $this->_getMvUrl();
-        $crawler = $this->client->request('GET', $this->_url . '/foro/');
+        $crawler = $this->client->request('GET', $this->_url . $slug);
         return $crawler->filter('.widecol .box');
     }
 }
