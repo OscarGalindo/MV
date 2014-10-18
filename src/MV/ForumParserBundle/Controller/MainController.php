@@ -30,31 +30,13 @@ class MainController extends Controller
 
     public function indexAction()
     {
-        $this->_url = $this->getMVUrl();
-
-        $crawler = $this->client->request('GET', $this->_url . '/foro/');
-
-        $titulos = $crawler->filter('.widecol .box');
-        $this->mv = $titulos->filter('h3')->each(function($n, $i) use ($titulos) {
+        $data = $this->_getHtml();
+        $this->mv = $data->filter('h3')->each(function($n) {
                 $data['title'] = $n->text();
-                $data['forums'] = $titulos->filter('.fpanels')->eq($i)->each(
-                    function ($x) {
-                        return $x->filter('.fpanel .info')->each(
-                            function ($z) {
-                                $foro[$z->filter('a')->first()->text()] = $z->filter('.sub a')->each(
-                                    function ($r) {
-                                        return $r->text();
-                                    }
-                                );
-                                return $foro;
-                            }
-                        );
-                    }
-                );
                 return $data;
             });
 
-        $json = new JsonResponse(array('titles' => $this->mv));
+        $json = new JsonResponse(array('MV' => $this->mv));
         $json->setEncodingOptions(128);
         return $json;
     }
@@ -70,8 +52,20 @@ class MainController extends Controller
      *
      * @return string
      */
-    private function getMVUrl()
+    private function _getMvUrl()
     {
         return $this->container->getParameter('mv.url');
+    }
+
+    /**
+     * Devuelve el crawler contenedor de la parte de foros de MV
+     *
+     * @return \Symfony\Component\DomCrawler\Crawler
+     */
+    private function _getHtml()
+    {
+        $this->_url = $this->_getMvUrl();
+        $crawler = $this->client->request('GET', $this->_url . '/foro/');
+        return $crawler->filter('.widecol .box');
     }
 }
