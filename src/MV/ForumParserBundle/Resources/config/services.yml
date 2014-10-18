@@ -1,0 +1,7 @@
+parameters:
+#    mv_forum_parser.example.class: MV\ForumParserBundle\Example
+
+services:
+#    mv_forum_parser.example:
+#        class: %mv_forum_parser.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

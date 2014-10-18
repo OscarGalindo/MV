@@ -1,0 +1,4 @@
+mv_forum_parser:
+    resource: "@MVForumParserBundle/Resources/config/routing.yml"
+    prefix:   /
+

@@ -1,0 +1,3 @@
+mv_forum_parser_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: MVForumParserBundle:Default:index }
