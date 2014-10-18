@@ -1,3 +1,9 @@
-mv_forum_parser_homepage:
-    path:     /hello/{name}
-    defaults: { _controller: MVForumParserBundle:Default:index }
+mv_forum_parser_titles:
+    path:     /
+    defaults: { _controller: MVForumParserBundle:Main:index }
+    methods:   [GET]
+
+mv_forum_parser_forum:
+    path:     /{slug_forum}
+    defaults: { _controller: MVForumParserBundle:Main:forum }
+    methods:   [GET]
