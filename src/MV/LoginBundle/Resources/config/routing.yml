@@ -1,3 +1,4 @@
 mv_login_homepage:
-    path:     /hello/{name}
-    defaults: { _controller: MVLoginBundle:Default:index }
+    path:     /login
+    defaults: { _controller: MVLoginBundle:Main:login }
+    methods: [POST]
