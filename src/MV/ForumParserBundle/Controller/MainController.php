@@ -13,7 +13,7 @@ class MainController extends Controller
     /**
      * @var string
      */
-    private $_url;
+    private $_url = 'http://m.mediavida.com/foro/';
 
     /**
      * @var Client
@@ -62,7 +62,7 @@ class MainController extends Controller
         $posts = array();
         $page = 'p' . $page;
 
-        $data = $this->_getGlobalHtml($slug_forum, $page);
+        $data = $this->_getHtml($slug_forum, $page);
         $data->filter('li')->each(function(Crawler $post, $i) use (&$posts) {
                 // $href = array_filter(explode('/', $post->filter('a')->attr('href')));
                 $resp = $post->filter('a span')->text();
@@ -88,25 +88,16 @@ class MainController extends Controller
         $json->setEncodingOptions(128);
         return $json;
     }
-    /**
-     * Devuelve la URL de MediaVida configurada en el config.yml del bundle
-     *
-     * @return string
-     */
-    private function _getMvUrl($foro = '')
-    {
-        return $this->container->getParameter('mv.forum_url') . $foro;
-    }
 
     /**
      * Devuelve el crawler contenedor de la parte de foros de MV
      *
      * @return \Symfony\Component\DomCrawler\Crawler
      */
-    private function _getGlobalHtml($slug = '', $page = '')
+    private function _getHtml($slug = '', $page = '')
     {
-        $this->_url = $this->_getMvUrl('/foro/');
-        $crawler = $this->client->request('GET', $this->_url . $slug . '/' . $page);
+        $url = $this->_url . $slug . '/' . $page;
+        $crawler = $this->client->request('GET', $url);
         return $crawler->filter('ul[data-role="listview"]');
     }
 }
