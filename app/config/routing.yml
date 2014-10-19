@@ -1,6 +1,5 @@
 mv_login:
-    resource: "@MVLoginBundle/Controller/"
-    type:     annotation
+    resource: "@MVLoginBundle/Resources/config/routing.yml"
     prefix:   /
 
 mv_forum_parser:

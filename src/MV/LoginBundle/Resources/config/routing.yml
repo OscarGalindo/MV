@@ -1,0 +1,3 @@
+mv_login_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: MVLoginBundle:Default:index }
