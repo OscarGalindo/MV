@@ -12,7 +12,7 @@ mv_forum_parser_topics:
 
 mv_forum_parser_posts:
   path: /getPost/{slug_forum}/{slug_post}/{page}
-  defaults: { _controller: MVForumParserBundle:Main:getPosts, page: 1 }
+  defaults: { _controller: MVForumParserBundle:Posts:getPosts, page: 1 }
   methods: [GET]
   requirements:
     page: \d+

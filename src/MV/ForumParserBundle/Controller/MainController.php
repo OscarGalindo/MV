@@ -78,19 +78,6 @@ class MainController extends Controller
         return $json;
     }
 
-    public function getPostsAction($slug_forum, $slug_post, $page)
-    {
-        $posts = array();
-        $url = $slug_forum . '/' . $slug_post;
-        $data = $this->_getHtml($url, $page);
-
-        var_dump($data->html());
-
-        $json = new JsonResponse($posts);
-        $json->setEncodingOptions(128);
-        return $json;
-    }
-
     /**
      * Devuelve el crawler contenedor de la parte de foros de MV
      *
@@ -99,7 +86,6 @@ class MainController extends Controller
     private function _getHtml($url = '', $page = '')
     {
         $url = $this->_url . $url . '/' . $page;
-        echo $url;
         $crawler = $this->client->request('GET', $url);
         return $crawler->filter('ul[data-role="listview"]');
     }
