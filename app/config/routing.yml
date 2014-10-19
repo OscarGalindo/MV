@@ -1,3 +1,8 @@
+mv_login:
+    resource: "@MVLoginBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
 mv_forum_parser:
     resource: "@MVForumParserBundle/Resources/config/routing.yml"
     prefix:   /
