@@ -47,7 +47,7 @@ class MainController extends Controller
             });
 
         $json = new JsonResponse($mv);
-        // $json->setEncodingOptions(128);
+        $json->setEncodingOptions(128);
         return $json;
     }
 
@@ -57,32 +57,45 @@ class MainController extends Controller
      * @param $slug_forum string
      * @return JsonResponse
      */
-    public function getTopicsAction($slug_forum)
+    public function getTopicsAction($slug_forum, $page)
     {
         $posts = array();
+        $page = 'p' . $page;
 
-        $data = $this->_getHtml($slug_forum);
+        $data = $this->_getGlobalHtml($slug_forum, $page);
         $data->filter('li')->each(function(Crawler $post, $i) use (&$posts) {
-                $posts[$i]['topic'] = trim($post->filter('a')->attr('title'));
-                $posts[$i]['href'] = $post->filter('a')->attr('href');
+                // $href = array_filter(explode('/', $post->filter('a')->attr('href')));
                 $resp = $post->filter('a span')->text();
-                $posts[$i]['resp'] = $resp;
-                $posts[$i]['pages'] = (($resp - $resp % 30) / 30 ) + 1;
+
+                $posts[$i]['topic'] = trim($post->filter('a')->attr('title'));
+                $posts[$i]['href']  = $post->filter('a')->attr('href');
+                $posts[$i]['resp']  = $resp;
+                $posts[$i]['pages'] = (($resp - $resp % 30) / 30) + 1;
             });
 
         $json = new JsonResponse($posts);
-        // $json->setEncodingOptions(128);
+        $json->setEncodingOptions(128);
         return $json;
     }
 
+    public function getPostsAction($cat, $slug_post, $page)
+    {
+        $posts = array();
+
+
+
+        $json = new JsonResponse($posts);
+        $json->setEncodingOptions(128);
+        return $json;
+    }
     /**
      * Devuelve la URL de MediaVida configurada en el config.yml del bundle
      *
      * @return string
      */
-    private function _getMvUrl()
+    private function _getMvUrl($foro = '')
     {
-        return $this->container->getParameter('mv.forum_url');
+        return $this->container->getParameter('mv.forum_url') . $foro;
     }
 
     /**
@@ -90,10 +103,10 @@ class MainController extends Controller
      *
      * @return \Symfony\Component\DomCrawler\Crawler
      */
-    private function _getHtml($slug = '')
+    private function _getGlobalHtml($slug = '', $page = '')
     {
-        $this->_url = $this->_getMvUrl();
-        $crawler = $this->client->request('GET', $this->_url . $slug);
+        $this->_url = $this->_getMvUrl('/foro/');
+        $crawler = $this->client->request('GET', $this->_url . $slug . '/' . $page);
         return $crawler->filter('ul[data-role="listview"]');
     }
 }

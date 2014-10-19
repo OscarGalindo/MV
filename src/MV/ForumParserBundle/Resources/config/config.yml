@@ -1,3 +1,2 @@
 parameters:
-  mv.url: http://m.mediavida.com
-  mv.forum_url: http://m.mediavida.com/foro/
+  mv.forum_url: http://m.mediavida.com

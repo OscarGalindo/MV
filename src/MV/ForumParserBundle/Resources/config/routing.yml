@@ -1,9 +1,18 @@
 mv_forum_parser_forums:
-    path:     /
-    defaults: { _controller: MVForumParserBundle:Main:getForums }
-    methods:   [GET]
+  path:     /
+  defaults: { _controller: MVForumParserBundle:Main:getForums }
+  methods:   [GET]
 
 mv_forum_parser_topics:
-    path:     /getTopics/{slug_forum}
-    defaults: { _controller: MVForumParserBundle:Main:getTopics }
-    methods:   [GET]
+  path:     /getTopics/{slug_forum}/{page}
+  defaults: { _controller: MVForumParserBundle:Main:getTopics, page: 1 }
+  methods:   [GET]
+  requirements:
+    page: \d+
+
+mv_forum_parser_posts:
+  path: /getPost/{cat}/{slug_post}/{page}
+  defaults: { _controller: MVForumParserBundle:Main:getPosts, page: 1 }
+  methods: [GET]
+  requirements:
+    page: \d+
