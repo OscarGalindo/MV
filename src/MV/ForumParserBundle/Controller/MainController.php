@@ -26,23 +26,20 @@ class MainController extends Controller
 
     public function indexAction()
     {
+        $mv = array();
+
         $data = $this->_getHtml();
-        $headers = $data->filter('h3')->each(function(Crawler $headers, $i) {
-                $data['title'] = $headers->text();
-                return $data;
+        $data->filter('li')->each(function(Crawler $headers, $i) use (&$countForums, &$title, &$mv) {
+                if($headers->attr('data-role')) {
+                    $title = $headers->text();
+                    $mv[$title] = '';
+                    $countForums = 0;
+                } else {
+                    $mv[$title][$countForums]['title'] = trim($headers->text());
+                    $mv[$title][$countForums]['url'] = $headers->filter('a')->first()->link()->getUri();
+                    $countForums++;
+                }
             });
-
-        $forums = $data->filter('.fpanels')->each(function(Crawler $forums, $i) {
-                $data['forums'] = $forums->filter('.fpanel .info a')->each(function(Crawler $link, $i) {
-                       return array('title' => $link->text(), 'link' => $link->link()->getUri());
-                    });
-                return $data;
-            });
-
-        for($i = 0; $i < count($headers); $i++) {
-            $mv[$i]['title'] = $headers[$i]['title'];
-            $mv[$i]['forums'] = $forums[$i]['forums'];
-        }
 
         $json = new JsonResponse($mv);
         // $json->setEncodingOptions(128);
@@ -75,6 +72,6 @@ class MainController extends Controller
     {
         $this->_url = $this->_getMvUrl();
         $crawler = $this->client->request('GET', $this->_url . $slug);
-        return $crawler->filter('.widecol .box');
+        return $crawler->filter('ul.foros');
     }
 }
