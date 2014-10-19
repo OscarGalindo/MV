@@ -78,11 +78,13 @@ class MainController extends Controller
         return $json;
     }
 
-    public function getPostsAction($cat, $slug_post, $page)
+    public function getPostsAction($slug_forum, $slug_post, $page)
     {
         $posts = array();
+        $url = $slug_forum . '/' . $slug_post;
+        $data = $this->_getHtml($url, $page);
 
-
+        var_dump($data->html());
 
         $json = new JsonResponse($posts);
         $json->setEncodingOptions(128);
@@ -94,9 +96,10 @@ class MainController extends Controller
      *
      * @return \Symfony\Component\DomCrawler\Crawler
      */
-    private function _getHtml($slug = '', $page = '')
+    private function _getHtml($url = '', $page = '')
     {
-        $url = $this->_url . $slug . '/' . $page;
+        $url = $this->_url . $url . '/' . $page;
+        echo $url;
         $crawler = $this->client->request('GET', $url);
         return $crawler->filter('ul[data-role="listview"]');
     }
