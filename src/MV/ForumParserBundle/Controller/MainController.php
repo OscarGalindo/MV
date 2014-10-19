@@ -65,14 +65,15 @@ class MainController extends Controller
         $data->filter('li')->each(function(Crawler $post, $i) use (&$posts) {
                 $posts[$i]['topic'] = trim($post->filter('a')->attr('title'));
                 $posts[$i]['href'] = $post->filter('a')->attr('href');
-                $posts[$i]['resp'] = $post->filter('a span')->text();
+                $resp = $post->filter('a span')->text();
+                $posts[$i]['resp'] = $resp;
+                $posts[$i]['pages'] = (($resp - $resp % 30) / 30 ) + 1;
             });
 
         $json = new JsonResponse($posts);
         // $json->setEncodingOptions(128);
         return $json;
     }
-
 
     /**
      * Devuelve la URL de MediaVida configurada en el config.yml del bundle
