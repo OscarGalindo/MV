@@ -24,7 +24,12 @@ class MainController extends Controller
         $this->client = new Client();
     }
 
-    public function indexAction()
+    /**
+     * Devuelve la lista de foros de MV
+     *
+     * @return JsonResponse
+     */
+    public function getForumsAction()
     {
         $mv = array();
 
@@ -46,10 +51,26 @@ class MainController extends Controller
         return $json;
     }
 
-    public function forumAction($slug_forum)
+    /**
+     * Devuelve los topics del foro seleccionado
+     *
+     * @param $slug_forum string
+     * @return JsonResponse
+     */
+    public function getTopicsAction($slug_forum)
     {
-        $data = $this->_getHtml();
-        return Response::create($data);
+        $posts = array();
+
+        $data = $this->_getHtml($slug_forum);
+        $data->filter('li')->each(function(Crawler $post, $i) use (&$posts) {
+                $posts[$i]['topic'] = trim($post->filter('a')->attr('title'));
+                $posts[$i]['href'] = $post->filter('a')->attr('href');
+                $posts[$i]['resp'] = $post->filter('a span')->text();
+            });
+
+        $json = new JsonResponse($posts);
+        // $json->setEncodingOptions(128);
+        return $json;
     }
 
 
@@ -72,6 +93,6 @@ class MainController extends Controller
     {
         $this->_url = $this->_getMvUrl();
         $crawler = $this->client->request('GET', $this->_url . $slug);
-        return $crawler->filter('ul.foros');
+        return $crawler->filter('ul[data-role="listview"]');
     }
 }
