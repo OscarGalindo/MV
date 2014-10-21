@@ -16,3 +16,8 @@ mv_forum_parser_posts:
   methods: [GET]
   requirements:
     page: \d+
+
+mv_forum_parser_login:
+  path: /login
+  defaults: { _controller: MVForumParserBundle:Login:login }
+  methods: [POST]

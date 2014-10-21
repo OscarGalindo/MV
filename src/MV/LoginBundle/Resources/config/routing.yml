@@ -1,4 +1,0 @@
-mv_login_homepage:
-    path:     /login
-    defaults: { _controller: MVLoginBundle:Main:login }
-    methods: [POST]

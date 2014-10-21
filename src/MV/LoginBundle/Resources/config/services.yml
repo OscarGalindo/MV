@@ -1,7 +1,0 @@
-parameters:
-#    mv_login.example.class: MV\LoginBundle\Example
-
-services:
-#    mv_login.example:
-#        class: %mv_login.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]

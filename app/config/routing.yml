@@ -1,7 +1,3 @@
-mv_login:
-    resource: "@MVLoginBundle/Resources/config/routing.yml"
-    prefix:   /
-
 mv_forum_parser:
     resource: "@MVForumParserBundle/Resources/config/routing.yml"
     prefix:   /

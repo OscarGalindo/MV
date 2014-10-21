@@ -1,13 +1,13 @@
 <?php
 
-namespace MV\LoginBundle\Controller;
+namespace MV\ForumParserBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Goutte\Client;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
-class MainController extends Controller
+class LoginController extends Controller
 {
     /**
      * @var string
@@ -41,9 +41,9 @@ class MainController extends Controller
         $pass = $req->request->get('password');
 
         $form = $html->selectButton('Entrar')->form();
-        $data = $this->_client->submit($form, array('name' => $user, 'password' => $pass, 'cookie' => 1));
+        $data = $this->_client->submit($form, array('name' => 'DarkSoldier', 'password' => 's0l0c0re', 'cookie' => 1));
         $cookie = $this->_client->getCookieJar();
-
+        var_dump($data->html());
         return new JsonResponse((array) $cookie);
     }
 
