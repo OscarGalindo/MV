@@ -37,14 +37,15 @@ class LoginController extends Controller
         $data = array();
         $html = $this->_getHtml();
         $req = Request::createFromGlobals();
-        $user = $req->request->get('username');
+        $user = strtolower($req->request->get('username'));
         $pass = $req->request->get('password');
 
         $form = $html->selectButton('Entrar')->form();
-        $data = $this->_client->submit($form, array('name' => 'DarkSoldier', 'password' => 's0l0c0re', 'cookie' => 1));
-        $cookie = $this->_client->getCookieJar();
-        var_dump($data->html());
-        return new JsonResponse((array) $cookie);
+        $data_crawler = $this->_client->submit($form, array('name' => $user, 'password' => $pass, 'cookie' => 1));
+        
+        $data['logout_url'] = $data_crawler->filter('span.separator > a')->link()->getUri();
+        $data['result'] = (strtolower($data_crawler->filter('#userinfo span')->eq(0)->text()) == $user) ? true : false;
+        return new JsonResponse($data);
     }
 
     /**
