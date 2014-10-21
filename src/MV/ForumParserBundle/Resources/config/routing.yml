@@ -25,4 +25,4 @@ mv_forum_parser_login:
 mv_forum_parser_notifs:
   path: /getNotifications
   defaults: { _controller: MVForumParserBundle:Notifications:getNotifications }
-  methods: [GET]
+  methods: [POST]
