@@ -12,3 +12,5 @@
 composer.lock
 /.idea/
 .DS_Store
+Capfile
+app/config/deploy.rb
