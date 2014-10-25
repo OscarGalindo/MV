@@ -47,7 +47,6 @@ class MainController extends Controller
             });
 
         $json = new JsonResponse($mv);
-        $json->setEncodingOptions(128);
         return $json;
     }
 
@@ -74,7 +73,6 @@ class MainController extends Controller
             });
 
         $json = new JsonResponse($posts);
-        $json->setEncodingOptions(128);
         return $json;
     }
 

@@ -38,11 +38,7 @@ class PostsController extends Controller
                 $posts[$i]['msg'] = trim($msg->filter('div.cuerpo')->html());
             });
 
-        // $posts = (object) $posts;
-        $json = new JsonResponse();
-        $json->setData($posts);
-        // $json->setEncodingOptions(128);
-        return $json;
+        return new JsonResponse($posts);
     }
 
 
