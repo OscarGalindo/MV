@@ -8,15 +8,15 @@
     },
     "require": {
         "php": ">=5.3.3",
-        "twig/extensions": "1.1.0",
+        "twig/extensions": "1.0.*",
         "symfony/symfony": "2.5.6",
-        "symfony/assetic-bundle": "2.5.0",
-        "symfony/monolog-bundle": "2.6.1",
-        "sensio/distribution-bundle": "3.0.7",
-        "sensio/framework-extra-bundle": "3.0.2",
-        "sensio/generator-bundle": "2.4.0",
-        "incenteev/composer-parameter-handler": "2.1.0",
-        "fabpot/goutte": "2.0.2"
+        "symfony/assetic-bundle": "2.3.*",
+        "symfony/monolog-bundle": "2.3.*",
+        "sensio/distribution-bundle": "2.3.*",
+        "sensio/framework-extra-bundle": "2.3.*",
+        "sensio/generator-bundle": "2.3.*",
+        "incenteev/composer-parameter-handler": "~2.0",
+        "fabpot/goutte": "~2.0"
     },
     "scripts": {
         "post-install-cmd": [
