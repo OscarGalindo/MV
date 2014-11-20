@@ -20,9 +20,7 @@ mv_forum_parser_posts:
 mv_forum_parser_login:
   path: /login
   defaults: { _controller: MVForumParserBundle:Login:login }
-  methods: [POST]
 
 mv_forum_parser_notifs:
   path: /getNotifications
   defaults: { _controller: MVForumParserBundle:Notifications:getNotifications }
-  methods: [POST]

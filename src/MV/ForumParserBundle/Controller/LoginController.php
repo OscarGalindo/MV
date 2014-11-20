@@ -4,9 +4,9 @@ namespace MV\ForumParserBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Goutte\Client;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\BrowserKit;
+use Symfony\Component\HttpFoundation\Request;
 
 class LoginController extends Controller
 {
@@ -33,21 +33,23 @@ class LoginController extends Controller
      *
      * @return JsonResponse
      */
-    public function loginAction()
+    public function loginAction(Request $request)
     {
         $data = array();
         $html = $this->_getHtml();
-        $req = Request::createFromGlobals();
 
-        $user = strtolower($req->request->get('username'));
-        $pass = $req->request->get('password');
+        $r = json_decode($request->getContent(), true);
+        $user = strtolower($r['username']);
+        $pass = $r['password'];
 
         $form = $html->selectButton('Entrar')->form();
         $data_crawler = $this->_client->submit($form, array('name' => $user, 'password' => $pass, 'cookie' => 1));
-        $user_html = strtolower($data_crawler->filter('#userinfo span')->eq(0)->text());
+
+        $d = $data_crawler->filter('#userinfo');
+        $user_html = strtolower($d->filter('a')->first()->text());
 
         $data['cookies'] = $this->_client->getRequest()->getCookies();
-        $data['logout_url'] = $data_crawler->filter('span.separator > a')->link()->getUri();
+        $data['logout_url'] = $d->filter('a')->last()->link()->getUri();
         $data['result'] = ($user_html == $user) ? true : false;
 
         return new JsonResponse($data);
