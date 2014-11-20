@@ -31,7 +31,7 @@ class NotificationsController extends Controller
         $data = array();
         $req = Request::createFromGlobals();
 
-        $cookies = json_decode($req->request->get('cookies'));
+        $cookies = json_decode($req->getContent(), true);
         $crawler = $this->_getHtml($cookies);
 
         $data['avs'] = $this->extractNotifications($crawler->filter('a')->eq(1));

@@ -48,9 +48,10 @@ class LoginController extends Controller
         $d = $data_crawler->filter('#userinfo');
         $user_html = strtolower($d->filter('a')->first()->text());
 
+        $data['result'] = ($user_html == $user) ? true : false;
         $data['cookies'] = $this->_client->getRequest()->getCookies();
         $data['logout_url'] = $d->filter('a')->last()->link()->getUri();
-        $data['result'] = ($user_html == $user) ? true : false;
+        $data['nickname'] = $d->filter('a')->first()->text();
 
         return new JsonResponse($data);
     }
