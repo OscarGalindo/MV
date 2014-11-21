@@ -58,6 +58,14 @@ class LoginController extends Controller
         return new JsonResponse($data);
     }
 
+    public function logoutAction(Request $request)
+    {
+        $r = json_decode($request->getContent(), true);
+        $url = strtolower($r['data_url']);
+        $this->_client->request('GET', $url);
+        return new JsonResponse(array('result' => false));
+    }
+
     /**
      * Devuelve el crawler contenedor de la parte de login de MV
      *
