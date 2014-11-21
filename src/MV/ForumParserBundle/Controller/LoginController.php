@@ -41,6 +41,8 @@ class LoginController extends Controller
         $r = json_decode($request->getContent(), true);
         $user = strtolower($r['username']);
         $pass = $r['password'];
+//        $user = strtolower('DarkSoldier'); // TEST IN LOCAL
+//        $pass = 'password'; // TEST IN LOCAL
 
         $form = $html->selectButton('Entrar')->form();
         $data_crawler = $this->_client->submit($form, array('name' => $user, 'password' => $pass, 'cookie' => 1));

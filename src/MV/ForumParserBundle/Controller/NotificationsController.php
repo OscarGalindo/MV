@@ -30,13 +30,17 @@ class NotificationsController extends Controller
     {
         $data = array();
         $req = Request::createFromGlobals();
-
         $cookies = json_decode($req->getContent(), true);
+//        $cookies = json_decode($req->get('cookies'), true); // TEST IN LOCAL
         $crawler = $this->_getHtml($cookies);
 
-        $data['avs'] = $this->extractNotifications($crawler->filter('a')->eq(1));
-        $data['fav'] = $this->extractNotifications($crawler->filter('a')->eq(2));
-        $data['msj'] = $this->extractNotifications($crawler->filter('a')->eq(3));
+        if(preg_match('/Regístrate/', $crawler->filter('a')->eq(1)->text())) {
+            $data['error'] = true;
+        } else {
+            $data['avs'] = $this->extractNotifications($crawler->filter('a')->eq(1));
+            $data['fav'] = $this->extractNotifications($crawler->filter('a')->eq(2));
+            $data['msj'] = $this->extractNotifications($crawler->filter('a')->eq(3));
+        }
 
         return new JsonResponse($data);
     }
