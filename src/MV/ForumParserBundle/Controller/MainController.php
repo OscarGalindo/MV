@@ -41,7 +41,7 @@ class MainController extends Controller
                     $countForums = 0;
                 } else {
                     $mv[$title][$countForums]['title'] = trim($headers->text());
-                    $mv[$title][$countForums]['url'] = $headers->filter('a')->first()->link()->getUri();
+                    $mv[$title][$countForums]['url'] = str_replace('http://m.mediavida.com/foro/', '', $headers->filter('a')->first()->link()->getUri());
                     $countForums++;
                 }
             });
@@ -62,14 +62,14 @@ class MainController extends Controller
         $page = 'p' . $page;
 
         $data = $this->_getHtml($slug_forum, $page);
-        $data->filter('li')->each(function(Crawler $post, $i) use (&$posts) {
+        $data->filter('li')->each(function(Crawler $post, $i) use (&$posts, $slug_forum) {
                 // $href = array_filter(explode('/', $post->filter('a')->attr('href')));
                 $resp = $post->filter('a span')->text();
 
-                $posts[$i]['topic'] = trim($post->filter('a')->attr('title'));
-                $posts[$i]['href']  = $post->filter('a')->attr('href');
+                $posts[$i]['title'] = trim($post->filter('a')->attr('title'));
+                $posts[$i]['href']  = str_replace('/foro/'.$slug_forum.'/', '', $post->filter('a')->attr('href'));
                 $posts[$i]['resp']  = $resp;
-                $posts[$i]['pages'] = (($resp - $resp % 30) / 30) + 1;
+                // $posts[$i]['pages'] = (($resp - $resp % 30) / 30) + 1;
             });
 
         $json = new JsonResponse($posts);

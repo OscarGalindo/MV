@@ -28,12 +28,14 @@ class PostsController extends Controller
     {
         $posts = array();
         $url = $slug_forum . '/' . $slug_post;
-        $data = $this->_getHtml($url, $page);
+        $data = $this->_getHtml($url);
 
         $data->filter('div.post')->each(function(Crawler $msg, $i) use (&$posts) {
                 $posts[$i]['id_post'] = trim($msg->filter('span.qn')->html());
-                $posts[$i]['autor'] = $msg->filter('div.autor > a')->text();
-                $posts[$i]['date'] = $msg->filter('div.autor > span')->text();
+                $posts[$i]['img'] = $msg->filter('.ui-block-a img')->attr('src');
+                $count_links = $msg->filter('div.autor a')->count();
+                $posts[$i]['autor'] = ($count_links) ? $msg->filter('div.autor a')->text() : $msg->filter('div.autor span')->first()->text();
+                $posts[$i]['date'] = $msg->filter('div.autor > span')->last()->text();
                 $posts[$i]['likes'] = trim($msg->filter('span.mola')->text());
                 $posts[$i]['msg'] = trim($msg->filter('div.cuerpo')->html());
             });
@@ -47,7 +49,7 @@ class PostsController extends Controller
      *
      * @return \Symfony\Component\DomCrawler\Crawler
      */
-    private function _getHtml($url = '', $page = '')
+    private function _getHtml($url = '', $page = 1)
     {
         $url = $this->_url . $url . '/' . $page;
         $crawler = $this->client->request('GET', $url);
