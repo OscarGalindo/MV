@@ -5,7 +5,6 @@ namespace MV\ForumParserBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Goutte\Client;
 
 class PostsController extends Controller
@@ -31,13 +30,13 @@ class PostsController extends Controller
         $data = $this->_getHtml($url);
 
         $data->filter('div.post')->each(function(Crawler $msg, $i) use (&$posts) {
-                $posts[$i]['id_post'] = trim($msg->filter('span.qn')->html());
-                $posts[$i]['img'] = $msg->filter('.ui-block-a img')->attr('src');
-                $count_links = $msg->filter('div.autor a')->count();
-                $posts[$i]['autor'] = ($count_links) ? $msg->filter('div.autor a')->text() : $msg->filter('div.autor span')->first()->text();
-                $posts[$i]['date'] = $msg->filter('div.autor > span')->last()->text();
-                $posts[$i]['likes'] = trim($msg->filter('span.mola')->text());
-                $posts[$i]['msg'] = trim($msg->filter('div.cuerpo')->html());
+            $posts[$i]['id_post'] = trim($msg->filter('span.qn')->html());
+            $posts[$i]['img'] = $msg->filter('.ui-block-a img')->attr('src');
+            $count_links = $msg->filter('div.autor a')->count();
+            $posts[$i]['autor'] = ($count_links) ? $msg->filter('div.autor a')->text() : $msg->filter('div.autor span')->first()->text();
+            $posts[$i]['date'] = $msg->filter('div.autor > span')->last()->text();
+            $posts[$i]['likes'] = ($msg->filter('.mola')->count()) ? trim($msg->filter('.mola')->text()) : '';
+            $posts[$i]['msg'] = trim($msg->filter('div.cuerpo')->html());
             });
 
         return new JsonResponse($posts);
